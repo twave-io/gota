@@ -54,6 +54,10 @@ type Element interface {
 	Float() float64
 	Bool() (bool, error)
 
+	// TODO: Testing
+	Int8() (int8, error)
+	Int32() (int32, error)
+
 	// Information methods
 	IsNA() bool
 	Type() Type
@@ -64,6 +68,25 @@ type intElements []intElement
 
 func (e intElements) Len() int           { return len(e) }
 func (e intElements) Elem(i int) Element { return &e[i] }
+
+////////////////////////////////////////////////////////////////
+// TODO: Testing
+
+// intElements is the concrete implementation of Elements for Int elements.
+type int8Elements []intElement
+
+func (e int8Elements) Len() int           { return len(e) }
+func (e int8Elements) Elem(i int) Element { return &e[i] }
+
+////////////////////////////////////////////////////////////////
+
+// intElements is the concrete implementation of Elements for Int elements.
+type int32Elements []intElement
+
+func (e int32Elements) Len() int           { return len(e) }
+func (e int32Elements) Elem(i int) Element { return &e[i] }
+
+////////////////////////////////////////////////////////////////
 
 // stringElements is the concrete implementation of Elements for String elements.
 type stringElements []stringElement
@@ -118,16 +141,20 @@ const (
 	Int    Type = "int"
 	Float  Type = "float"
 	Bool   Type = "bool"
+
+	// TODO: Testing
+	Int8  Type = "int8"
+	Int32 Type = "int32"
 )
 
 // Indexes represent the elements that can be used for selecting a subset of
 // elements within a Series. Currently supported are:
 //
-//     int            // Matches the given index number
-//     []int          // Matches all given index numbers
-//     []bool         // Matches all elements in a Series marked as true
-//     Series [Int]   // Same as []int
-//     Series [Bool]  // Same as []bool
+//	int            // Matches the given index number
+//	[]int          // Matches all given index numbers
+//	[]bool         // Matches all elements in a Series marked as true
+//	Series [Int]   // Same as []int
+//	Series [Bool]  // Same as []bool
 type Indexes interface{}
 
 // New is the generic Series constructor
@@ -144,6 +171,11 @@ func New(values interface{}, t Type, name string) Series {
 			ret.elements = make(stringElements, n)
 		case Int:
 			ret.elements = make(intElements, n)
+		// TODO: testing
+		case Int8:
+			ret.elements = make(int8Elements, n)
+		case Int32:
+			ret.elements = make(int32Elements, n)
 		case Float:
 			ret.elements = make(floatElements, n)
 		case Bool:
@@ -159,6 +191,7 @@ func New(values interface{}, t Type, name string) Series {
 		return ret
 	}
 
+	// TODO: Common code, can refactor similar switch cases
 	switch v := values.(type) {
 	case []string:
 		l := len(v)
@@ -173,6 +206,19 @@ func New(values interface{}, t Type, name string) Series {
 			ret.elements.Elem(i).Set(v[i])
 		}
 	case []int:
+		l := len(v)
+		preAlloc(l)
+		for i := 0; i < l; i++ {
+			ret.elements.Elem(i).Set(v[i])
+		}
+		// TODO: testing
+	case []int8:
+		l := len(v)
+		preAlloc(l)
+		for i := 0; i < l; i++ {
+			ret.elements.Elem(i).Set(v[i])
+		}
+	case []int32:
 		l := len(v)
 		preAlloc(l)
 		for i := 0; i < l; i++ {
@@ -221,6 +267,17 @@ func Ints(values interface{}) Series {
 	return New(values, Int, "")
 }
 
+// TODO: testing
+// Ints is a constructor for an Int8 Series
+func Int8s(values interface{}) Series {
+	return New(values, Int8, "")
+}
+
+// Ints is a constructor for an Int32 Series
+func Int32s(values interface{}) Series {
+	return New(values, Int32, "")
+}
+
 // Floats is a constructor for a Float Series
 func Floats(values interface{}) Series {
 	return New(values, Float, "")
@@ -253,6 +310,11 @@ func (s *Series) Append(values interface{}) {
 		s.elements = append(s.elements.(stringElements), news.elements.(stringElements)...)
 	case Int:
 		s.elements = append(s.elements.(intElements), news.elements.(intElements)...)
+		// TODO: testing
+	case Int8:
+		s.elements = append(s.elements.(int8Elements), news.elements.(int8Elements)...)
+	case Int32:
+		s.elements = append(s.elements.(int32Elements), news.elements.(int32Elements)...)
 	case Float:
 		s.elements = append(s.elements.(floatElements), news.elements.(floatElements)...)
 	case Bool:
@@ -300,6 +362,19 @@ func (s Series) Subset(indexes Indexes) Series {
 		elements := make(intElements, len(idx))
 		for k, i := range idx {
 			elements[k] = s.elements.(intElements)[i]
+		}
+		ret.elements = elements
+		// TODO: testing
+	case Int8:
+		elements := make(int8Elements, len(idx))
+		for k, i := range idx {
+			elements[k] = s.elements.(int8Elements)[i]
+		}
+		ret.elements = elements
+	case Int32:
+		elements := make(int32Elements, len(idx))
+		for k, i := range idx {
+			elements[k] = s.elements.(int32Elements)[i]
 		}
 		ret.elements = elements
 	case Float:
@@ -490,6 +565,13 @@ func (s Series) Copy() Series {
 	case Int:
 		elements = make(intElements, s.Len())
 		copy(elements.(intElements), s.elements.(intElements))
+	// TODO: testing
+	case Int8:
+		elements = make(int8Elements, s.Len())
+		copy(elements.(int8Elements), s.elements.(int8Elements))
+	case Int32:
+		elements = make(int32Elements, s.Len())
+		copy(elements.(int32Elements), s.elements.(int32Elements))
 	}
 	ret := Series{
 		Name:     name,
@@ -529,6 +611,37 @@ func (s Series) Int() ([]int, error) {
 	for i := 0; i < s.Len(); i++ {
 		e := s.elements.Elem(i)
 		val, err := e.Int()
+		if err != nil {
+			return nil, err
+		}
+		ret[i] = val
+	}
+	return ret, nil
+}
+
+// TODO: testing
+// Int8 returns the elements of a Series as a []int8 or an error if the
+// transformation is not possible.
+func (s Series) Int8() ([]int8, error) {
+	ret := make([]int8, s.Len())
+	for i := 0; i < s.Len(); i++ {
+		e := s.elements.Elem(i)
+		val, err := e.Int8()
+		if err != nil {
+			return nil, err
+		}
+		ret[i] = val
+	}
+	return ret, nil
+}
+
+// Int32 returns the elements of a Series as a []int32 or an error if the
+// transformation is not possible.
+func (s Series) Int32() ([]int32, error) {
+	ret := make([]int32, s.Len())
+	for i := 0; i < s.Len(); i++ {
+		e := s.elements.Elem(i)
+		val, err := e.Int32()
 		if err != nil {
 			return nil, err
 		}

@@ -79,6 +79,25 @@ func (e stringElement) Int() (int, error) {
 	return strconv.Atoi(e.e)
 }
 
+// TODO: Testing
+func (e stringElement) Int8() (int8, error) {
+	if e.IsNA() {
+		return 0, fmt.Errorf("can't convert NaN to int8")
+	}
+
+	value, err := strconv.ParseInt(e.e, 10, 8)
+	return int8(value), err
+}
+
+func (e stringElement) Int32() (int32, error) {
+	if e.IsNA() {
+		return 0, fmt.Errorf("can't convert NaN to int32")
+	}
+
+	value, err := strconv.ParseInt(e.e, 10, 32)
+	return int32(value), err
+}
+
 func (e stringElement) Float() float64 {
 	if e.IsNA() {
 		return math.NaN()

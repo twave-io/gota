@@ -6,15 +6,15 @@ import (
 	"strconv"
 )
 
-type intElement struct {
-	e   int
+type int32Element struct {
+	e   int32
 	nan bool
 }
 
-// force intElement struct to implement Element interface
-var _ Element = (*intElement)(nil)
+// force int32Element struct to implement Element interface
+var _ Element = (*int32Element)(nil)
 
-func (e *intElement) Set(value interface{}) {
+func (e *int32Element) Set(value interface{}) {
 	e.nan = false
 	switch val := value.(type) {
 	case string:
@@ -22,14 +22,15 @@ func (e *intElement) Set(value interface{}) {
 			e.nan = true
 			return
 		}
-		i, err := strconv.Atoi(value.(string))
+		// i, err := strconv.Atoi(value.(string))
+		i, err := strconv.ParseInt(value.(string), 10, 32)
 		if err != nil {
 			e.nan = true
 			return
 		}
-		e.e = i
+		e.e = int32(i)
 	case int:
-		e.e = int(val)
+		e.e = int32(val)
 	case float64:
 		f := val
 		if math.IsNaN(f) ||
@@ -38,7 +39,7 @@ func (e *intElement) Set(value interface{}) {
 			e.nan = true
 			return
 		}
-		e.e = int(f)
+		e.e = int32(f)
 	case bool:
 		b := val
 		if b {
@@ -47,7 +48,7 @@ func (e *intElement) Set(value interface{}) {
 			e.e = 0
 		}
 	case Element:
-		v, err := val.Int()
+		v, err := val.Int32()
 		if err != nil {
 			e.nan = true
 			return
@@ -59,36 +60,36 @@ func (e *intElement) Set(value interface{}) {
 	}
 }
 
-func (e intElement) Copy() Element {
+func (e int32Element) Copy() Element {
 	if e.IsNA() {
-		return &intElement{0, true}
+		return &int32Element{0, true}
 	}
-	return &intElement{e.e, false}
+	return &int32Element{e.e, false}
 }
 
-func (e intElement) IsNA() bool {
+func (e int32Element) IsNA() bool {
 	return e.nan
 }
 
-func (e intElement) Type() Type {
+func (e int32Element) Type() Type {
 	return Int
 }
 
-func (e intElement) Val() ElementValue {
+func (e int32Element) Val() ElementValue {
 	if e.IsNA() {
 		return nil
 	}
 	return int(e.e)
 }
 
-func (e intElement) String() string {
+func (e int32Element) String() string {
 	if e.IsNA() {
 		return "NaN"
 	}
 	return fmt.Sprint(e.e)
 }
 
-func (e intElement) Int() (int, error) {
+func (e int32Element) Int() (int, error) {
 	if e.IsNA() {
 		return 0, fmt.Errorf("can't convert NaN to int")
 	}
@@ -96,28 +97,28 @@ func (e intElement) Int() (int, error) {
 }
 
 // TODO: Testing
-func (e intElement) Int8() (int8, error) {
+func (e int32Element) Int8() (int8, error) {
 	if e.IsNA() {
 		return 0, fmt.Errorf("can't convert NaN to int8")
 	}
 	return int8(e.e), nil
 }
 
-func (e intElement) Int32() (int32, error) {
+func (e int32Element) Int32() (int32, error) {
 	if e.IsNA() {
 		return 0, fmt.Errorf("can't convert NaN to int32")
 	}
 	return int32(e.e), nil
 }
 
-func (e intElement) Float() float64 {
+func (e int32Element) Float() float64 {
 	if e.IsNA() {
 		return math.NaN()
 	}
 	return float64(e.e)
 }
 
-func (e intElement) Bool() (bool, error) {
+func (e int32Element) Bool() (bool, error) {
 	if e.IsNA() {
 		return false, fmt.Errorf("can't convert NaN to bool")
 	}
@@ -130,48 +131,48 @@ func (e intElement) Bool() (bool, error) {
 	return false, fmt.Errorf("can't convert Int \"%v\" to bool", e.e)
 }
 
-func (e intElement) Eq(elem Element) bool {
-	i, err := elem.Int()
+func (e int32Element) Eq(elem Element) bool {
+	i, err := elem.Int32()
 	if err != nil || e.IsNA() {
 		return false
 	}
 	return e.e == i
 }
 
-func (e intElement) Neq(elem Element) bool {
-	i, err := elem.Int()
+func (e int32Element) Neq(elem Element) bool {
+	i, err := elem.Int32()
 	if err != nil || e.IsNA() {
 		return false
 	}
 	return e.e != i
 }
 
-func (e intElement) Less(elem Element) bool {
-	i, err := elem.Int()
+func (e int32Element) Less(elem Element) bool {
+	i, err := elem.Int32()
 	if err != nil || e.IsNA() {
 		return false
 	}
 	return e.e < i
 }
 
-func (e intElement) LessEq(elem Element) bool {
-	i, err := elem.Int()
+func (e int32Element) LessEq(elem Element) bool {
+	i, err := elem.Int32()
 	if err != nil || e.IsNA() {
 		return false
 	}
 	return e.e <= i
 }
 
-func (e intElement) Greater(elem Element) bool {
-	i, err := elem.Int()
+func (e int32Element) Greater(elem Element) bool {
+	i, err := elem.Int32()
 	if err != nil || e.IsNA() {
 		return false
 	}
 	return e.e > i
 }
 
-func (e intElement) GreaterEq(elem Element) bool {
-	i, err := elem.Int()
+func (e int32Element) GreaterEq(elem Element) bool {
+	i, err := elem.Int32()
 	if err != nil || e.IsNA() {
 		return false
 	}

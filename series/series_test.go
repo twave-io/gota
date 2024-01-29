@@ -82,6 +82,31 @@ func TestSeries_Compare(t *testing.T) {
 			[]int{0, 2, 0, 5, 10},
 			Bools([]bool{true, true, false, true, false}),
 		},
+		// TODO: testing
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			Eq,
+			"2",
+			Bools([]bool{false, true, false, false, false}),
+		},
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			Eq,
+			[]int{0, 2, 0, 5, 10},
+			Bools([]bool{true, true, false, true, false}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
+			Eq,
+			"2",
+			Bools([]bool{false, true, false, false, false}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
+			Eq,
+			[]int{0, 2, 0, 5, 10},
+			Bools([]bool{true, true, false, true, false}),
+		},
 		{
 			Floats([]float64{0.1, 2, 1, 5, 9}),
 			Eq,
@@ -126,6 +151,31 @@ func TestSeries_Compare(t *testing.T) {
 		},
 		{
 			Ints([]int{0, 2, 1, 5, 9}),
+			Neq,
+			[]int{0, 2, 0, 5, 10},
+			Bools([]bool{false, false, true, false, true}),
+		},
+		// TODO: testing
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			Neq,
+			"2",
+			Bools([]bool{true, false, true, true, true}),
+		},
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			Neq,
+			[]int{0, 2, 0, 5, 10},
+			Bools([]bool{false, false, true, false, true}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
+			Neq,
+			"2",
+			Bools([]bool{true, false, true, true, true}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
 			Neq,
 			[]int{0, 2, 0, 5, 10},
 			Bools([]bool{false, false, true, false, true}),
@@ -178,6 +228,31 @@ func TestSeries_Compare(t *testing.T) {
 			[]int{0, 2, 0, 5, 10},
 			Bools([]bool{false, false, true, false, false}),
 		},
+		// TODO: testing
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			Greater,
+			"2",
+			Bools([]bool{false, false, false, true, true}),
+		},
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			Greater,
+			[]int{0, 2, 0, 5, 10},
+			Bools([]bool{false, false, true, false, false}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
+			Greater,
+			"2",
+			Bools([]bool{false, false, false, true, true}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
+			Greater,
+			[]int{0, 2, 0, 5, 10},
+			Bools([]bool{false, false, true, false, false}),
+		},
 		{
 			Floats([]float64{0.1, 2, 1, 5, 9}),
 			Greater,
@@ -222,6 +297,31 @@ func TestSeries_Compare(t *testing.T) {
 		},
 		{
 			Ints([]int{0, 2, 1, 5, 9}),
+			GreaterEq,
+			[]int{0, 2, 0, 5, 10},
+			Bools([]bool{true, true, true, true, false}),
+		},
+		// TODO: testing
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			GreaterEq,
+			"2",
+			Bools([]bool{false, true, false, true, true}),
+		},
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			GreaterEq,
+			[]int{0, 2, 0, 5, 10},
+			Bools([]bool{true, true, true, true, false}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
+			GreaterEq,
+			"2",
+			Bools([]bool{false, true, false, true, true}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
 			GreaterEq,
 			[]int{0, 2, 0, 5, 10},
 			Bools([]bool{true, true, true, true, false}),
@@ -274,6 +374,31 @@ func TestSeries_Compare(t *testing.T) {
 			[]int{0, 2, 0, 5, 10},
 			Bools([]bool{false, false, false, false, true}),
 		},
+		// TODO: testing
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			Less,
+			"2",
+			Bools([]bool{true, false, true, false, false}),
+		},
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			Less,
+			[]int{0, 2, 0, 5, 10},
+			Bools([]bool{false, false, false, false, true}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
+			Less,
+			"2",
+			Bools([]bool{true, false, true, false, false}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
+			Less,
+			[]int{0, 2, 0, 5, 10},
+			Bools([]bool{false, false, false, false, true}),
+		},
 		{
 			Floats([]float64{0.1, 2, 1, 5, 9}),
 			Less,
@@ -322,6 +447,31 @@ func TestSeries_Compare(t *testing.T) {
 			[]int{0, 2, 0, 5, 10},
 			Bools([]bool{true, true, false, true, true}),
 		},
+		// TODO: testing
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			LessEq,
+			"2",
+			Bools([]bool{true, true, true, false, false}),
+		},
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			LessEq,
+			[]int{0, 2, 0, 5, 10},
+			Bools([]bool{true, true, false, true, true}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
+			LessEq,
+			"2",
+			Bools([]bool{true, true, true, false, false}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
+			LessEq,
+			[]int{0, 2, 0, 5, 10},
+			Bools([]bool{true, true, false, true, true}),
+		},
 		{
 			Floats([]float64{0.1, 2, 1, 5, 9}),
 			LessEq,
@@ -366,6 +516,31 @@ func TestSeries_Compare(t *testing.T) {
 		},
 		{
 			Ints([]int{0, 2, 1, 5, 9}),
+			In,
+			[]int{2, 99, 1234, 9},
+			Bools([]bool{false, true, false, false, true}),
+		},
+		// TODO: testing
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			In,
+			"2",
+			Bools([]bool{false, true, false, false, false}),
+		},
+		{
+			Int8s([]int{0, 2, 1, 5, 9}),
+			In,
+			[]int{2, 99, 1234, 9},
+			Bools([]bool{false, true, false, false, true}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
+			In,
+			"2",
+			Bools([]bool{false, true, false, false, false}),
+		},
+		{
+			Int32s([]int{0, 2, 1, 5, 9}),
 			In,
 			[]int{2, 99, 1234, 9},
 			Bools([]bool{false, true, false, false, true}),

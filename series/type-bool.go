@@ -108,6 +108,27 @@ func (e boolElement) Int() (int, error) {
 	return 0, nil
 }
 
+// TODO: Testing
+func (e boolElement) Int8() (int8, error) {
+	if e.IsNA() {
+		return 0, fmt.Errorf("can't convert NaN to int8")
+	}
+	if e.e {
+		return 1, nil
+	}
+	return 0, nil
+}
+
+func (e boolElement) Int32() (int32, error) {
+	if e.IsNA() {
+		return 0, fmt.Errorf("can't convert NaN to int32")
+	}
+	if e.e {
+		return 1, nil
+	}
+	return 0, nil
+}
+
 func (e boolElement) Float() float64 {
 	if e.IsNA() {
 		return math.NaN()
