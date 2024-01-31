@@ -14,6 +14,7 @@ type boolElement struct {
 // force boolElement struct to implement Element interface
 var _ Element = (*boolElement)(nil)
 
+// TODO: switch cases; revise parsers for uints
 func (e *boolElement) Set(value interface{}) {
 	e.nan = false
 	switch val := value.(type) {
@@ -108,10 +109,9 @@ func (e boolElement) Int() (int, error) {
 	return 0, nil
 }
 
-// TODO: Testing
-func (e boolElement) Int8() (int8, error) {
+func (e boolElement) Uint8() (uint8, error) {
 	if e.IsNA() {
-		return 0, fmt.Errorf("can't convert NaN to int8")
+		return 0, fmt.Errorf("can't convert NaN to uint8")
 	}
 	if e.e {
 		return 1, nil
@@ -119,9 +119,19 @@ func (e boolElement) Int8() (int8, error) {
 	return 0, nil
 }
 
-func (e boolElement) Int32() (int32, error) {
+func (e boolElement) Uint32() (uint32, error) {
 	if e.IsNA() {
-		return 0, fmt.Errorf("can't convert NaN to int32")
+		return 0, fmt.Errorf("can't convert NaN to uint32")
+	}
+	if e.e {
+		return 1, nil
+	}
+	return 0, nil
+}
+
+func (e boolElement) Uint64() (uint64, error) {
+	if e.IsNA() {
+		return 0, fmt.Errorf("can't convert NaN to uint64")
 	}
 	if e.e {
 		return 1, nil
@@ -132,6 +142,16 @@ func (e boolElement) Int32() (int32, error) {
 func (e boolElement) Float() float64 {
 	if e.IsNA() {
 		return math.NaN()
+	}
+	if e.e {
+		return 1.0
+	}
+	return 0.0
+}
+
+func (e boolElement) Float32() float32 {
+	if e.IsNA() {
+		return float32(math.NaN())
 	}
 	if e.e {
 		return 1.0

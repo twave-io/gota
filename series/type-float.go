@@ -93,40 +93,60 @@ func (e floatElement) Int() (int, error) {
 	return int(f), nil
 }
 
-// TODO: Testing
-func (e floatElement) Int8() (int8, error) {
+func (e floatElement) Uint8() (uint8, error) {
 	if e.IsNA() {
-		return 0, fmt.Errorf("can't convert NaN to int8")
+		return 0, fmt.Errorf("can't convert NaN to uint8")
 	}
 	f := e.e
 	if math.IsInf(f, 1) || math.IsInf(f, -1) {
-		return 0, fmt.Errorf("can't convert Inf to int8")
+		return 0, fmt.Errorf("can't convert Inf to uint8")
 	}
 	if math.IsNaN(f) {
-		return 0, fmt.Errorf("can't convert NaN to int8")
+		return 0, fmt.Errorf("can't convert NaN to uint8")
 	}
-	return int8(f), nil
+	return uint8(f), nil
 }
 
-func (e floatElement) Int32() (int32, error) {
+func (e floatElement) Uint32() (uint32, error) {
 	if e.IsNA() {
-		return 0, fmt.Errorf("can't convert NaN to int32")
+		return 0, fmt.Errorf("can't convert NaN to uint32")
 	}
 	f := e.e
 	if math.IsInf(f, 1) || math.IsInf(f, -1) {
-		return 0, fmt.Errorf("can't convert Inf to int32")
+		return 0, fmt.Errorf("can't convert Inf to uint32")
 	}
 	if math.IsNaN(f) {
-		return 0, fmt.Errorf("can't convert NaN to int32")
+		return 0, fmt.Errorf("can't convert NaN to uint32")
 	}
-	return int32(f), nil
+	return uint32(f), nil
+}
+
+func (e floatElement) Uint64() (uint64, error) {
+	if e.IsNA() {
+		return 0, fmt.Errorf("can't convert NaN to uint64")
+	}
+	f := e.e
+	if math.IsInf(f, 1) || math.IsInf(f, -1) {
+		return 0, fmt.Errorf("can't convert Inf to uint64")
+	}
+	if math.IsNaN(f) {
+		return 0, fmt.Errorf("can't convert NaN to uint64")
+	}
+	return uint64(f), nil
 }
 
 func (e floatElement) Float() float64 {
 	if e.IsNA() {
 		return math.NaN()
 	}
-	return float64(e.e)
+	return e.e
+}
+
+func (e floatElement) Float32() float32 {
+	if e.IsNA() {
+		return float32(math.NaN())
+	}
+	return float32(e.e)
 }
 
 func (e floatElement) Bool() (bool, error) {

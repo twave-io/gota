@@ -15,6 +15,7 @@ type stringElement struct {
 // force stringElement struct to implement Element interface
 var _ Element = (*stringElement)(nil)
 
+// TODO: switch cases
 func (e *stringElement) Set(value interface{}) {
 	e.nan = false
 	switch val := value.(type) {
@@ -79,23 +80,31 @@ func (e stringElement) Int() (int, error) {
 	return strconv.Atoi(e.e)
 }
 
-// TODO: Testing
-func (e stringElement) Int8() (int8, error) {
+func (e stringElement) Uint8() (uint8, error) {
 	if e.IsNA() {
-		return 0, fmt.Errorf("can't convert NaN to int8")
+		return 0, fmt.Errorf("can't convert NaN to uint8")
 	}
 
-	value, err := strconv.ParseInt(e.e, 10, 8)
-	return int8(value), err
+	value, err := strconv.ParseUint(e.e, 10, 8)
+	return uint8(value), err
 }
 
-func (e stringElement) Int32() (int32, error) {
+func (e stringElement) Uint32() (uint32, error) {
 	if e.IsNA() {
-		return 0, fmt.Errorf("can't convert NaN to int32")
+		return 0, fmt.Errorf("can't convert NaN to uint32")
 	}
 
-	value, err := strconv.ParseInt(e.e, 10, 32)
-	return int32(value), err
+	value, err := strconv.ParseUint(e.e, 10, 32)
+	return uint32(value), err
+}
+
+func (e stringElement) Uint64() (uint64, error) {
+	if e.IsNA() {
+		return 0, fmt.Errorf("can't convert NaN to uint64")
+	}
+
+	value, err := strconv.ParseUint(e.e, 10, 64)
+	return uint64(value), err
 }
 
 func (e stringElement) Float() float64 {
@@ -107,6 +116,17 @@ func (e stringElement) Float() float64 {
 		return math.NaN()
 	}
 	return f
+}
+
+func (e stringElement) Float32() float32 {
+	if e.IsNA() {
+		return float32(math.NaN())
+	}
+	f, err := strconv.ParseFloat(e.e, 32)
+	if err != nil {
+		return float32(math.NaN())
+	}
+	return float32(f)
 }
 
 func (e stringElement) Bool() (bool, error) {
