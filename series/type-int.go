@@ -30,11 +30,26 @@ func (e *intElement) Set(value interface{}) {
 		e.e = i
 	case int:
 		e.e = int(val)
+	case uint8:
+		e.e = int(val)
+	case uint32:
+		e.e = int(val)
+	case uint64:
+		e.e = int(val)
 	case float64:
 		f := val
 		if math.IsNaN(f) ||
 			math.IsInf(f, 0) ||
 			math.IsInf(f, 1) {
+			e.nan = true
+			return
+		}
+		e.e = int(f)
+	case float32:
+		f := val
+		if math.IsNaN(float64(f)) ||
+			math.IsInf(float64(f), 0) ||
+			math.IsInf(float64(f), 1) {
 			e.nan = true
 			return
 		}

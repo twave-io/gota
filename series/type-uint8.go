@@ -23,7 +23,7 @@ func (e *uint8Element) Set(value interface{}) {
 			return
 		}
 		// i, err := strconv.Atoi(value.(string))
-		i, err := strconv.ParseUint(value.(string), 10, 8) // FIXME: ParseUint
+		i, err := strconv.ParseUint(value.(string), 10, 8)
 		if err != nil {
 			e.nan = true
 			return
@@ -31,11 +31,26 @@ func (e *uint8Element) Set(value interface{}) {
 		e.e = uint8(i)
 	case int:
 		e.e = uint8(val)
+	case uint8:
+		e.e = uint8(val)
+	case uint32:
+		e.e = uint8(val)
+	case uint64:
+		e.e = uint8(val)
 	case float64:
 		f := val
 		if math.IsNaN(f) ||
 			math.IsInf(f, 0) ||
 			math.IsInf(f, 1) {
+			e.nan = true
+			return
+		}
+		e.e = uint8(f)
+	case float32:
+		f := val
+		if math.IsNaN(float64(f)) ||
+			math.IsInf(float64(f), 0) ||
+			math.IsInf(float64(f), 1) {
 			e.nan = true
 			return
 		}
@@ -96,7 +111,6 @@ func (e uint8Element) Int() (int, error) {
 	return int(e.e), nil
 }
 
-// TODO: Testing
 func (e uint8Element) Uint8() (uint8, error) {
 	if e.IsNA() {
 		return 0, fmt.Errorf("can't convert NaN to uint8")
@@ -141,7 +155,7 @@ func (e uint8Element) Bool() (bool, error) {
 	case 0:
 		return false, nil
 	}
-	return false, fmt.Errorf("can't convert Int \"%v\" to bool", e.e)
+	return false, fmt.Errorf("can't convert Uint8 \"%v\" to bool", e.e)
 }
 
 func (e uint8Element) Eq(elem Element) bool {

@@ -15,7 +15,6 @@ type stringElement struct {
 // force stringElement struct to implement Element interface
 var _ Element = (*stringElement)(nil)
 
-// TODO: switch cases
 func (e *stringElement) Set(value interface{}) {
 	e.nan = false
 	switch val := value.(type) {
@@ -27,8 +26,16 @@ func (e *stringElement) Set(value interface{}) {
 		}
 	case int:
 		e.e = strconv.Itoa(val)
+	case uint8:
+		e.e = strconv.FormatUint(uint64(val), 10)
+	case uint32:
+		e.e = strconv.FormatUint(uint64(val), 10)
+	case uint64:
+		e.e = strconv.FormatUint(val, 10)
 	case float64:
 		e.e = strconv.FormatFloat(value.(float64), 'f', 6, 64)
+	case float32:
+		e.e = strconv.FormatFloat(float64(value.(float32)), 'f', 6, 32)
 	case bool:
 		b := value.(bool)
 		if b {

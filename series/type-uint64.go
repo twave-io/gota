@@ -23,7 +23,7 @@ func (e *uint64Element) Set(value interface{}) {
 			return
 		}
 		// i, err := strconv.Atoi(value.(string))
-		i, err := strconv.ParseInt(value.(string), 10, 32)
+		i, err := strconv.ParseUint(value.(string), 10, 64)
 		if err != nil {
 			e.nan = true
 			return
@@ -31,11 +31,26 @@ func (e *uint64Element) Set(value interface{}) {
 		e.e = uint64(i)
 	case int:
 		e.e = uint64(val)
+	case uint8:
+		e.e = uint64(val)
+	case uint32:
+		e.e = uint64(val)
+	case uint64:
+		e.e = uint64(val)
 	case float64:
 		f := val
 		if math.IsNaN(f) ||
 			math.IsInf(f, 0) ||
 			math.IsInf(f, 1) {
+			e.nan = true
+			return
+		}
+		e.e = uint64(f)
+	case float32:
+		f := val
+		if math.IsNaN(float64(f)) ||
+			math.IsInf(float64(f), 0) ||
+			math.IsInf(float64(f), 1) {
 			e.nan = true
 			return
 		}
@@ -141,7 +156,7 @@ func (e uint64Element) Bool() (bool, error) {
 	case 0:
 		return false, nil
 	}
-	return false, fmt.Errorf("can't convert Int \"%v\" to bool", e.e)
+	return false, fmt.Errorf("can't convert Uint64 \"%v\" to bool", e.e)
 }
 
 func (e uint64Element) Eq(elem Element) bool {

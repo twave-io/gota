@@ -144,16 +144,14 @@ type Type string
 
 // Supported Series Types
 const (
-	String Type = "string"
-	Int    Type = "int"
-	Float  Type = "float"
-	Bool   Type = "bool"
-
-	// TODO: Testing
+	String  Type = "string"
+	Int     Type = "int"
 	Uint8   Type = "uint8"
 	Uint32  Type = "uint32"
 	Uint64  Type = "uint64"
+	Float   Type = "float"
 	Float32 Type = "float32"
+	Bool    Type = "bool"
 )
 
 // Indexes represent the elements that can be used for selecting a subset of
@@ -180,13 +178,16 @@ func New(values interface{}, t Type, name string) Series {
 			ret.elements = make(stringElements, n)
 		case Int:
 			ret.elements = make(intElements, n)
-		// TODO: testing
 		case Uint8:
 			ret.elements = make(uint8Elements, n)
 		case Uint32:
 			ret.elements = make(uint32Elements, n)
+		case Uint64:
+			ret.elements = make(uint64Elements, n)
 		case Float:
 			ret.elements = make(floatElements, n)
+		case Float32:
+			ret.elements = make(float32Elements, n)
 		case Bool:
 			ret.elements = make(boolElements, n)
 		default:
@@ -214,13 +215,18 @@ func New(values interface{}, t Type, name string) Series {
 		for i := 0; i < l; i++ {
 			ret.elements.Elem(i).Set(v[i])
 		}
+	case []float32:
+		l := len(v)
+		preAlloc(l)
+		for i := 0; i < l; i++ {
+			ret.elements.Elem(i).Set(v[i])
+		}
 	case []int:
 		l := len(v)
 		preAlloc(l)
 		for i := 0; i < l; i++ {
 			ret.elements.Elem(i).Set(v[i])
 		}
-		// TODO: testing
 	case []uint8:
 		l := len(v)
 		preAlloc(l)
@@ -228,6 +234,12 @@ func New(values interface{}, t Type, name string) Series {
 			ret.elements.Elem(i).Set(v[i])
 		}
 	case []uint32:
+		l := len(v)
+		preAlloc(l)
+		for i := 0; i < l; i++ {
+			ret.elements.Elem(i).Set(v[i])
+		}
+	case []uint64:
 		l := len(v)
 		preAlloc(l)
 		for i := 0; i < l; i++ {
@@ -276,20 +288,29 @@ func Ints(values interface{}) Series {
 	return New(values, Int, "")
 }
 
-// TODO: testing
-// Ints is a constructor for an uint8 Series
+// Uint8s is a constructor for an uint8 Series
 func Uint8s(values interface{}) Series {
 	return New(values, Uint8, "")
 }
 
-// Ints is a constructor for an Uint32 Series
+// Uint32s is a constructor for an Uint32 Series
 func Uint32s(values interface{}) Series {
 	return New(values, Uint32, "")
+}
+
+// Uint64s is a constructor for an Uint64 Series
+func Uint64s(values interface{}) Series {
+	return New(values, Uint64, "")
 }
 
 // Floats is a constructor for a Float Series
 func Floats(values interface{}) Series {
 	return New(values, Float, "")
+}
+
+// Float32s is a constructor for a Float32 Series
+func Float32s(values interface{}) Series {
+	return New(values, Float32, "")
 }
 
 // Bools is a constructor for a Bool Series
@@ -319,13 +340,16 @@ func (s *Series) Append(values interface{}) {
 		s.elements = append(s.elements.(stringElements), news.elements.(stringElements)...)
 	case Int:
 		s.elements = append(s.elements.(intElements), news.elements.(intElements)...)
-		// TODO: testing
 	case Uint8:
 		s.elements = append(s.elements.(uint8Elements), news.elements.(uint8Elements)...)
 	case Uint32:
 		s.elements = append(s.elements.(uint32Elements), news.elements.(uint32Elements)...)
+	case Uint64:
+		s.elements = append(s.elements.(uint64Elements), news.elements.(uint64Elements)...)
 	case Float:
 		s.elements = append(s.elements.(floatElements), news.elements.(floatElements)...)
+	case Float32:
+		s.elements = append(s.elements.(float32Elements), news.elements.(float32Elements)...)
 	case Bool:
 		s.elements = append(s.elements.(boolElements), news.elements.(boolElements)...)
 	}
@@ -373,7 +397,6 @@ func (s Series) Subset(indexes Indexes) Series {
 			elements[k] = s.elements.(intElements)[i]
 		}
 		ret.elements = elements
-		// TODO: testing
 	case Uint8:
 		elements := make(uint8Elements, len(idx))
 		for k, i := range idx {
@@ -386,10 +409,22 @@ func (s Series) Subset(indexes Indexes) Series {
 			elements[k] = s.elements.(uint32Elements)[i]
 		}
 		ret.elements = elements
+	case Uint64:
+		elements := make(uint64Elements, len(idx))
+		for k, i := range idx {
+			elements[k] = s.elements.(uint64Elements)[i]
+		}
+		ret.elements = elements
 	case Float:
 		elements := make(floatElements, len(idx))
 		for k, i := range idx {
 			elements[k] = s.elements.(floatElements)[i]
+		}
+		ret.elements = elements
+	case Float32:
+		elements := make(float32Elements, len(idx))
+		for k, i := range idx {
+			elements[k] = s.elements.(float32Elements)[i]
 		}
 		ret.elements = elements
 	case Bool:
@@ -568,19 +603,24 @@ func (s Series) Copy() Series {
 	case Float:
 		elements = make(floatElements, s.Len())
 		copy(elements.(floatElements), s.elements.(floatElements))
+	case Float32:
+		elements = make(float32Elements, s.Len())
+		copy(elements.(float32Elements), s.elements.(float32Elements))
 	case Bool:
 		elements = make(boolElements, s.Len())
 		copy(elements.(boolElements), s.elements.(boolElements))
 	case Int:
 		elements = make(intElements, s.Len())
 		copy(elements.(intElements), s.elements.(intElements))
-	// TODO: testing
 	case Uint8:
 		elements = make(uint8Elements, s.Len())
 		copy(elements.(uint8Elements), s.elements.(uint8Elements))
 	case Uint32:
 		elements = make(uint32Elements, s.Len())
 		copy(elements.(uint32Elements), s.elements.(uint32Elements))
+	case Uint64:
+		elements = make(uint64Elements, s.Len())
+		copy(elements.(uint64Elements), s.elements.(uint64Elements))
 	}
 	ret := Series{
 		Name:     name,
@@ -613,6 +653,18 @@ func (s Series) Float() []float64 {
 	return ret
 }
 
+// Float32 returns the elements of a Series as a []float32. If the elements can
+// not be converted to float32 or contains a NaN returns the float representation
+// of NaN.
+func (s Series) Float32() []float32 {
+	ret := make([]float32, s.Len())
+	for i := 0; i < s.Len(); i++ {
+		e := s.elements.Elem(i)
+		ret[i] = e.Float32()
+	}
+	return ret
+}
+
 // Int returns the elements of a Series as a []int or an error if the
 // transformation is not possible.
 func (s Series) Int() ([]int, error) {
@@ -628,7 +680,6 @@ func (s Series) Int() ([]int, error) {
 	return ret, nil
 }
 
-// TODO: testing
 // Uint8 returns the elements of a Series as a []uint8 or an error if the
 // transformation is not possible.
 func (s Series) Uint8() ([]uint8, error) {
@@ -651,6 +702,21 @@ func (s Series) Uint32() ([]uint32, error) {
 	for i := 0; i < s.Len(); i++ {
 		e := s.elements.Elem(i)
 		val, err := e.Uint32()
+		if err != nil {
+			return nil, err
+		}
+		ret[i] = val
+	}
+	return ret, nil
+}
+
+// Uint64 returns the elements of a Series as a []uint64 or an error if the
+// transformation is not possible.
+func (s Series) Uint64() ([]uint64, error) {
+	ret := make([]uint64, s.Len())
+	for i := 0; i < s.Len(); i++ {
+		e := s.elements.Elem(i)
+		val, err := e.Uint64()
 		if err != nil {
 			return nil, err
 		}
@@ -798,6 +864,7 @@ func (e indexedElements) Len() int           { return len(e) }
 func (e indexedElements) Less(i, j int) bool { return e[i].element.Less(e[j].element) }
 func (e indexedElements) Swap(i, j int)      { e[i], e[j] = e[j], e[i] }
 
+// TODO: Add support for population standard deviation
 // StdDev calculates the standard deviation of a series
 func (s Series) StdDev() float64 {
 	stdDev := stat.StdDev(s.Float(), nil)

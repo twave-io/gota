@@ -30,6 +30,14 @@ func (e *float32Element) Set(value interface{}) {
 		e.e = float32(f)
 	case int:
 		e.e = float32(val)
+	case uint8:
+		e.e = float32(val)
+	case uint32:
+		e.e = float32(val)
+	case uint64:
+		e.e = float32(val)
+	case float64:
+		e.e = float32(val)
 	case float32:
 		e.e = float32(val)
 	case bool:
@@ -55,7 +63,7 @@ func (e float32Element) Copy() Element {
 }
 
 func (e float32Element) IsNA() bool {
-	if e.nan || e != e { // NaN always returns false for equality
+	if e.nan || math.IsNaN(float64(e.e)) {
 		return true
 	}
 	return false

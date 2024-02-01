@@ -30,7 +30,15 @@ func (e *floatElement) Set(value interface{}) {
 		e.e = f
 	case int:
 		e.e = float64(val)
+	case uint8:
+		e.e = float64(val)
+	case uint32:
+		e.e = float64(val)
+	case uint64:
+		e.e = float64(val)
 	case float64:
+		e.e = float64(val)
+	case float32:
 		e.e = float64(val)
 	case bool:
 		b := val

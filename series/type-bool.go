@@ -14,7 +14,6 @@ type boolElement struct {
 // force boolElement struct to implement Element interface
 var _ Element = (*boolElement)(nil)
 
-// TODO: switch cases; revise parsers for uints
 func (e *boolElement) Set(value interface{}) {
 	e.nan = false
 	switch val := value.(type) {
@@ -42,7 +41,47 @@ func (e *boolElement) Set(value interface{}) {
 			e.nan = true
 			return
 		}
+	case uint8:
+		switch val {
+		case 1:
+			e.e = true
+		case 0:
+			e.e = false
+		default:
+			e.nan = true
+			return
+		}
+	case uint32:
+		switch val {
+		case 1:
+			e.e = true
+		case 0:
+			e.e = false
+		default:
+			e.nan = true
+			return
+		}
+	case uint64:
+		switch val {
+		case 1:
+			e.e = true
+		case 0:
+			e.e = false
+		default:
+			e.nan = true
+			return
+		}
 	case float64:
+		switch val {
+		case 1:
+			e.e = true
+		case 0:
+			e.e = false
+		default:
+			e.nan = true
+			return
+		}
+	case float32:
 		switch val {
 		case 1:
 			e.e = true
