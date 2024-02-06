@@ -28,6 +28,8 @@ func (e *stringElement) Set(value interface{}) {
 		e.e = strconv.Itoa(val)
 	case uint8:
 		e.e = strconv.FormatUint(uint64(val), 10)
+	case uint16:
+		e.e = strconv.FormatUint(uint64(val), 10)
 	case uint32:
 		e.e = strconv.FormatUint(uint64(val), 10)
 	case uint64:
@@ -94,6 +96,15 @@ func (e stringElement) Uint8() (uint8, error) {
 
 	value, err := strconv.ParseUint(e.e, 10, 8)
 	return uint8(value), err
+}
+
+func (e stringElement) Uint16() (uint16, error) {
+	if e.IsNA() {
+		return 0, fmt.Errorf("can't convert NaN to uint16")
+	}
+
+	value, err := strconv.ParseUint(e.e, 10, 16)
+	return uint16(value), err
 }
 
 func (e stringElement) Uint32() (uint32, error) {
