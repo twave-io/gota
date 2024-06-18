@@ -71,6 +71,16 @@ func (e *boolElement) Set(value interface{}) {
 			e.nan = true
 			return
 		}
+	case int64:
+		switch val {
+		case 1:
+			e.e = true
+		case 0:
+			e.e = false
+		default:
+			e.nan = true
+			return
+		}
 	case uint64:
 		switch val {
 		case 1:
@@ -181,6 +191,16 @@ func (e boolElement) Uint16() (uint16, error) {
 func (e boolElement) Uint32() (uint32, error) {
 	if e.IsNA() {
 		return 0, fmt.Errorf("can't convert NaN to uint32")
+	}
+	if e.e {
+		return 1, nil
+	}
+	return 0, nil
+}
+
+func (e boolElement) Int64() (int64, error) {
+	if e.IsNA() {
+		return 0, fmt.Errorf("can't convert NaN to int64")
 	}
 	if e.e {
 		return 1, nil

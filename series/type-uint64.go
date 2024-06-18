@@ -134,6 +134,13 @@ func (e uint64Element) Uint32() (uint32, error) {
 	return uint32(e.e), nil
 }
 
+func (e uint64Element) Int64() (int64, error) {
+	if e.IsNA() {
+		return 0, fmt.Errorf("can't convert NaN to int64")
+	}
+	return int64(e.e), nil
+}
+
 func (e uint64Element) Uint64() (uint64, error) {
 	if e.IsNA() {
 		return 0, fmt.Errorf("can't convert NaN to uint64")

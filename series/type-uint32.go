@@ -37,6 +37,8 @@ func (e *uint32Element) Set(value interface{}) {
 		e.e = uint32(val)
 	case uint32:
 		e.e = uint32(val)
+	case int64:
+		e.e = uint32(val)
 	case uint64:
 		e.e = uint32(val)
 	case float64:
@@ -132,6 +134,13 @@ func (e uint32Element) Uint32() (uint32, error) {
 		return 0, fmt.Errorf("can't convert NaN to uint32")
 	}
 	return uint32(e.e), nil
+}
+
+func (e uint32Element) Int64() (int64, error) {
+	if e.IsNA() {
+		return 0, fmt.Errorf("can't convert NaN to int64")
+	}
+	return int64(e.e), nil
 }
 
 func (e uint32Element) Uint64() (uint64, error) {

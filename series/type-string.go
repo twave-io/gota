@@ -32,6 +32,8 @@ func (e *stringElement) Set(value interface{}) {
 		e.e = strconv.FormatUint(uint64(val), 10)
 	case uint32:
 		e.e = strconv.FormatUint(uint64(val), 10)
+	case int64:
+		e.e = strconv.FormatInt(val, 10)
 	case uint64:
 		e.e = strconv.FormatUint(val, 10)
 	case float64:
@@ -114,6 +116,13 @@ func (e stringElement) Uint32() (uint32, error) {
 
 	value, err := strconv.ParseUint(e.e, 10, 32)
 	return uint32(value), err
+}
+
+func (e stringElement) Int64() (int64, error) {
+	if e.IsNA() {
+		return 0, fmt.Errorf("can't convert NaN to int64")
+	}
+	return strconv.ParseInt(e.e, 10, 64)
 }
 
 func (e stringElement) Uint64() (uint64, error) {

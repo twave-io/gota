@@ -54,6 +54,7 @@ type Element interface {
 	Uint8() (uint8, error)
 	Uint16() (uint16, error)
 	Uint32() (uint32, error)
+	Int64() (int64, error)
 	Uint64() (uint64, error)
 	Float() float64
 	Float32() float32
@@ -89,10 +90,16 @@ func (e uint32Elements) Len() int           { return len(e) }
 func (e uint32Elements) Elem(i int) Element { return &e[i] }
 
 // uint64Elements is the concrete implementation of Elements for Uint64 elements.
-type uint64Elements []uint64Element
+type uint64Elements []int64Element
 
 func (e uint64Elements) Len() int           { return len(e) }
 func (e uint64Elements) Elem(i int) Element { return &e[i] }
+
+// int64Elements is the concrete implementation of Elements for Int64 elements.
+type int64Elements []int64Element
+
+func (e int64Elements) Len() int           { return len(e) }
+func (e int64Elements) Elem(i int) Element { return &e[i] }
 
 // stringElements is the concrete implementation of Elements for String elements.
 type stringElements []stringElement

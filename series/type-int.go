@@ -30,11 +30,21 @@ func (e *intElement) Set(value interface{}) {
 		e.e = i
 	case int:
 		e.e = int(val)
+	case uint:
+		e.e = int(val)
+	case int8:
+		e.e = int(val)
 	case uint8:
+		e.e = int(val)
+	case int16:
 		e.e = int(val)
 	case uint16:
 		e.e = int(val)
+	case int32:
+		e.e = int(val)
 	case uint32:
+		e.e = int(val)
+	case int64:
 		e.e = int(val)
 	case uint64:
 		e.e = int(val)
@@ -131,6 +141,13 @@ func (e intElement) Uint32() (uint32, error) {
 		return 0, fmt.Errorf("can't convert NaN to uint32")
 	}
 	return uint32(e.e), nil
+}
+
+func (e intElement) Int64() (int64, error) {
+	if e.IsNA() {
+		return 0, fmt.Errorf("can't convert NaN to int64")
+	}
+	return int64(e.e), nil
 }
 
 func (e intElement) Uint64() (uint64, error) {
